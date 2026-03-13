@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Store Module Test Suite" parallel="classes" thread-count="4">
+    <test name="Store Tests">
+        <classes>
+            <class name="tests.store.GetInventoryTests"/>
+            <class name="tests.store.GetOrderTests"/>
+            <class name="tests.store.PlaceOrderTests"/>
+        </classes>
+    </test>
+</suite>

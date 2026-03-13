@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="API Automation Suite" parallel="classes" thread-count="5">
+    <listeners>
+        <listener class-name="listeners.AllureTestListener"/>
+    </listeners>
+    <test name="Pet Module Tests">
+        <classes>
+            <class name="tests.pet.AddPetTests"/>
+            <class name="tests.pet.GetPetTests"/>
+            <class name="tests.pet.UpdatePetTests"/>
+            <class name="tests.pet.DeletePetTests"/>
+            <class name="tests.pet.UploadImageTests"/>
+        </classes>
+    </test>
+    <test name="Store Module Tests">
+        <classes>
+            <class name="tests.store.GetInventoryTests"/>
+            <class name="tests.store.GetOrderTests"/>
+            <class name="tests.store.PlaceOrderTests"/>
+        </classes>
+    </test>
+    <test name="User Module Tests">
+        <classes>
+            <class name="tests.user.CreateUserTests"/>
+            <class name="tests.user.GetUserTests"/>
+            <class name="tests.user.UpdateUserTests"/>
+            <class name="tests.user.DeleteUserTests"/>
+            <class name="tests.user.LoginUserTests"/>
+        </classes>
+    </test>
+</suite>

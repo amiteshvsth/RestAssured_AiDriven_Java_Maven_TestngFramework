@@ -1,0 +1,12 @@
+target/
+allure-results/
+allure-report/
+logs/
+surefire-reports/
+.idea/
+.vscode/
+*.iml
+.DS_Store
+*.class
+*.jar
+*.war
