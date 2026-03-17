@@ -1,7 +1,7 @@
 package tests.pet;
 
 import base.BaseApiTest;
-import dataFactory.pet.PetDF;
+import dataFactory.PetDF;
 import dto.pet.AddPetRequest;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;

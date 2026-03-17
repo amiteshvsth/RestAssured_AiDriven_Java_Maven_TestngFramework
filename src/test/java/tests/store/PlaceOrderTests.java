@@ -1,7 +1,7 @@
 package tests.store;
 
 import base.BaseApiTest;
-import dataFactory.store.StoreDF;
+import dataFactory.StoreDF;
 import dto.store.PlaceOrderRequest;
 import endpoints.StoreEndpoints;
 import io.restassured.response.Response;

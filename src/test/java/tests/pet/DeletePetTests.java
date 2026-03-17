@@ -1,7 +1,7 @@
 package tests.pet;
 
 import base.BaseApiTest;
-import dataFactory.pet.PetDF;
+import dataFactory.PetDF;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;

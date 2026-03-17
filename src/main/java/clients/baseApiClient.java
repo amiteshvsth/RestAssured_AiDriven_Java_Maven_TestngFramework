@@ -1,7 +1,6 @@
 package clients;
 
 import builders.RequestBuilder;
-import config.AppConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import utils.Logger;
@@ -11,7 +10,6 @@ public class BaseApiClient {
 
     public BaseApiClient() {
         baseSpec = new RequestBuilder().build();
-        baseSpec.baseUri(AppConfig.getBaseUrl());
     }
 
     public Response get(String endpoint) {

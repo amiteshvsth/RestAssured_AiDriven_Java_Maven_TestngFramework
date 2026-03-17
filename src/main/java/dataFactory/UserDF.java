@@ -1,4 +1,4 @@
-package dataFactory.user;
+package dataFactory;
 
 import dto.user.CreateUserRequest;
 import dto.user.CreateUsersWithArrayRequest;

@@ -1,7 +1,6 @@
 package base;
 
 import clients.BaseApiClient;
-import config.AppConfig;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -23,7 +22,7 @@ public class BaseApiTest {
 
     @BeforeClass
     public void setup() {
-        RestAssured.baseURI = AppConfig.getBaseUrl();
+        RestAssured.baseURI = "https://petstore.swagger.io/v2";
         apiClient = new BaseApiClient();
         AllureUtils.initializeContext();
     }

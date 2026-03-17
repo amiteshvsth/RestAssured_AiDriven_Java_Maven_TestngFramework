@@ -1,7 +1,7 @@
 package tests.user;
 
 import base.BaseApiTest;
-import dataFactory.user.UserDF;
+import dataFactory.UserDF;
 import dto.user.UpdateUserRequest;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;

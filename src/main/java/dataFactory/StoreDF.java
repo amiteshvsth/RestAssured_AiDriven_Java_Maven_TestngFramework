@@ -1,4 +1,4 @@
-package dataFactory.store;
+package dataFactory;
 
 import dto.store.PlaceOrderRequest;
 

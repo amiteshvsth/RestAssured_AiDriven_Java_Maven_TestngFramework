@@ -1,4 +1,4 @@
-package dataFactory.pet;
+package dataFactory;
 
 import dto.pet.AddPetRequest;
 import dto.pet.Category;
