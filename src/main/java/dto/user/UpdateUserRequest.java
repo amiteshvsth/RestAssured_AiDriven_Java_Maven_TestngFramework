@@ -1,4 +1,4 @@
-package dto.request.user;
+package dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateUserRequest {
+public class UpdateUserRequest {
     private Long id;
     private String username;
     private String firstName;

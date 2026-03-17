@@ -1,9 +1,9 @@
 package dataFactory.pet;
 
-import dto.request.pet.AddPetRequest;
-import dto.request.pet.Category;
-import dto.request.pet.Tag;
-import dto.request.pet.UpdatePetRequest;
+import dto.pet.AddPetRequest;
+import dto.pet.Category;
+import dto.pet.Tag;
+import dto.pet.UpdatePetRequest;
 
 import java.util.Arrays;
 

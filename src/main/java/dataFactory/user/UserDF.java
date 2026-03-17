@@ -1,9 +1,9 @@
 package dataFactory.user;
 
-import dto.request.user.CreateUserRequest;
-import dto.request.user.CreateUsersWithArrayRequest;
-import dto.request.user.CreateUsersWithListRequest;
-import dto.request.user.UpdateUserRequest;
+import dto.user.CreateUserRequest;
+import dto.user.CreateUsersWithArrayRequest;
+import dto.user.CreateUsersWithListRequest;
+import dto.user.UpdateUserRequest;
 
 import java.util.Arrays;
 import java.util.List;

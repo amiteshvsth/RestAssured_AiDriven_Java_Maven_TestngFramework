@@ -1,6 +1,6 @@
 package dataFactory.store;
 
-import dto.request.store.PlaceOrderRequest;
+import dto.store.PlaceOrderRequest;
 
 import java.time.OffsetDateTime;
 

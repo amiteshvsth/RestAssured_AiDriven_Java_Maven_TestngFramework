@@ -1,4 +1,4 @@
-package dto.request.pet;
+package dto.pet;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Tag {
     private Long id;
     private String name;
 }

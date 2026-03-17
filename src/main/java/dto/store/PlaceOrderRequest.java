@@ -1,24 +1,23 @@
-package dto.request.pet;
+package dto.store;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AddPetRequest {
+public class PlaceOrderRequest {
     private Long id;
-    private Category category;
-    private String name;
-    private List<String> photoUrls;
-    private List<Tag> tags;
+    private Long petId;
+    private Integer quantity;
+    private OffsetDateTime shipDate;
     private String status;
+    private Boolean complete;
 }

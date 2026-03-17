@@ -2,7 +2,7 @@ package tests.store;
 
 import base.BaseApiTest;
 import dataFactory.store.StoreDF;
-import dto.request.store.PlaceOrderRequest;
+import dto.store.PlaceOrderRequest;
 import endpoints.StoreEndpoints;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;

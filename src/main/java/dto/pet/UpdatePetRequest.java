@@ -1,23 +1,24 @@
-package dto.request.user;
+package dto.pet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateUserRequest {
+public class UpdatePetRequest {
     private Long id;
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private String phone;
-    private Integer userStatus;
+    private Category category;
+    private String name;
+    private List<String> photoUrls;
+    private List<Tag> tags;
+    private String status;
 }

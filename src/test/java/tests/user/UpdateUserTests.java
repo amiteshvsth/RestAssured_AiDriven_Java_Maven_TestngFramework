@@ -2,7 +2,7 @@ package tests.user;
 
 import base.BaseApiTest;
 import dataFactory.user.UserDF;
-import dto.request.user.UpdateUserRequest;
+import dto.user.UpdateUserRequest;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;

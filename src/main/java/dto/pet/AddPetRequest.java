@@ -1,4 +1,4 @@
-package dto.request.pet;
+package dto.pet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdatePetRequest {
+public class AddPetRequest {
     private Long id;
     private Category category;
     private String name;
