@@ -1,73 +1,73 @@
 package tests.user;
 
-import base.baseApiTest;
+import base.BaseApiTest;
 import dataFactory.user.UserDF;
 import dto.request.user.CreateUserRequest;
-import endpoints.userEndpoints;
+import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import validators.responseValidator;
+import validators.ResponseValidator;
 
-public class CreateUserTests extends baseApiTest {
+public class CreateUserTests extends BaseApiTest {
 
     @Test(groups = {"smoke", "regression", "user", "positive"})
     public void verifyThatCreateUserShouldReturn200WhenValidPayload() {
         CreateUserRequest request = UserDF.createValidCreateUserRequest();
-        Response response = apiClient.post(userEndpoints.CREATE_USER, request);
-        responseValidator.validateStatusCode(response, 200);
-        responseValidator.validateJsonFieldEquals(response, "code", 200);
-        responseValidator.validateFieldExists(response, "message");
+        Response response = apiClient.post(UserEndpoints.CREATE_USER, request);
+        ResponseValidator.validateStatusCode(response, 200);
+        ResponseValidator.validateJsonFieldEquals(response, "code", 200);
+        ResponseValidator.validateFieldExists(response, "message");
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatCreateUserShouldReturn200WhenMinimalDataProvided() {
         CreateUserRequest request = UserDF.createCreateUserRequestWithMinimalData();
-        Response response = apiClient.post(userEndpoints.CREATE_USER, request);
-        responseValidator.validateStatusCode(response, 200);
-        responseValidator.validateJsonFieldEquals(response, "code", 200);
+        Response response = apiClient.post(UserEndpoints.CREATE_USER, request);
+        ResponseValidator.validateStatusCode(response, 200);
+        ResponseValidator.validateJsonFieldEquals(response, "code", 200);
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatCreateUserShouldReturnResponseWithinTimeLimit() {
         CreateUserRequest request = UserDF.createValidCreateUserRequest();
-        Response response = apiClient.post(userEndpoints.CREATE_USER, request);
-        responseValidator.validateResponseTime(response, 3000);
+        Response response = apiClient.post(UserEndpoints.CREATE_USER, request);
+        ResponseValidator.validateResponseTime(response, 3000);
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatCreateUserShouldReturnProperContentType() {
         CreateUserRequest request = UserDF.createValidCreateUserRequest();
-        Response response = apiClient.post(userEndpoints.CREATE_USER, request);
-        responseValidator.validateContentType(response, "application/json");
+        Response response = apiClient.post(UserEndpoints.CREATE_USER, request);
+        ResponseValidator.validateContentType(response, "application/json");
     }
 
     @Test(groups = {"regression", "user", "negative"})
     public void verifyThatCreateUserWithInvalidEmailShouldReturn200() {
         CreateUserRequest request = UserDF.createCreateUserRequestWithInvalidEmail();
-        Response response = apiClient.post(userEndpoints.CREATE_USER, request);
-        responseValidator.validateStatusCode(response, 200);
+        Response response = apiClient.post(UserEndpoints.CREATE_USER, request);
+        ResponseValidator.validateStatusCode(response, 200);
     }
 
     @Test(groups = {"regression", "user", "edge"})
     public void verifyThatCreateUserWithEmptyPayloadShouldReturn200() {
         CreateUserRequest request = UserDF.createCreateUserRequestWithEmptyPayload();
-        Response response = apiClient.post(userEndpoints.CREATE_USER, request);
-        responseValidator.validateStatusCode(response, 200);
+        Response response = apiClient.post(UserEndpoints.CREATE_USER, request);
+        ResponseValidator.validateStatusCode(response, 200);
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatCreateUsersWithArrayShouldReturn200() {
-        Response response = apiClient.post(userEndpoints.CREATE_USER_WITH_ARRAY, 
+        Response response = apiClient.post(UserEndpoints.CREATE_USER_WITH_ARRAY, 
                 UserDF.createValidCreateUsersWithArrayRequest());
-        responseValidator.validateStatusCode(response, 200);
-        responseValidator.validateJsonFieldEquals(response, "code", 200);
+        ResponseValidator.validateStatusCode(response, 200);
+        ResponseValidator.validateJsonFieldEquals(response, "code", 200);
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatCreateUsersWithListShouldReturn200() {
-        Response response = apiClient.post(userEndpoints.CREATE_USER_WITH_LIST, 
+        Response response = apiClient.post(UserEndpoints.CREATE_USER_WITH_LIST, 
                 UserDF.createValidCreateUsersWithListRequest());
-        responseValidator.validateStatusCode(response, 200);
-        responseValidator.validateJsonFieldEquals(response, "code", 200);
+        ResponseValidator.validateStatusCode(response, 200);
+        ResponseValidator.validateJsonFieldEquals(response, "code", 200);
     }
 }

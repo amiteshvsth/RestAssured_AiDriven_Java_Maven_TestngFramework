@@ -1,7 +1,7 @@
 package base;
 
-import clients.baseApiClient;
-import config.appConfig;
+import clients.BaseApiClient;
+import config.AppConfig;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -12,8 +12,8 @@ import utils.TraceUtils;
 
 import java.io.File;
 
-public class baseApiTest {
-    protected baseApiClient apiClient;
+public class BaseApiTest {
+    protected BaseApiClient apiClient;
 
     @BeforeSuite
     public void initializeReporting() {
@@ -23,8 +23,8 @@ public class baseApiTest {
 
     @BeforeClass
     public void setup() {
-        RestAssured.baseURI = appConfig.getBaseUrl();
-        apiClient = new baseApiClient();
+        RestAssured.baseURI = AppConfig.getBaseUrl();
+        apiClient = new BaseApiClient();
         AllureUtils.initializeContext();
     }
 

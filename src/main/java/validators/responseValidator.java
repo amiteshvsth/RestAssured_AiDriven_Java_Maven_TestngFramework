@@ -5,7 +5,7 @@ import org.hamcrest.Matcher;
 
 import static org.hamcrest.Matchers.*;
 
-public class responseValidator {
+public class ResponseValidator {
     public static void validateStatusCode(Response response, int expectedStatusCode) {
         response.then().statusCode(expectedStatusCode);
     }

@@ -1,4 +1,4 @@
-package dto.response.store;
+package dto.request.store;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

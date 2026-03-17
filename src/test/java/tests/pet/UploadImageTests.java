@@ -1,53 +1,53 @@
 package tests.pet;
 
-import base.baseApiTest;
+import base.BaseApiTest;
 import dataFactory.pet.PetDF;
-import endpoints.petEndpoints;
+import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
-import validators.responseValidator;
+import validators.ResponseValidator;
 
-public class UploadImageTests extends baseApiTest {
+public class UploadImageTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatUploadImageShouldReturn200WhenValidPetId() {
         long petId = PetDF.getValidPetId();
         String metadata = "test metadata";
-        Response response = apiClient.post(petEndpoints.UPLOAD_IMAGE, metadata, petId);
-        responseValidator.validateStatusCode(response, 200);
-        responseValidator.validateFieldExists(response, "code");
-        responseValidator.validateFieldExists(response, "message");
-        responseValidator.validateFieldExists(response, "type");
+        Response response = apiClient.post(PetEndpoints.UPLOAD_IMAGE, metadata, petId);
+        ResponseValidator.validateStatusCode(response, 200);
+        ResponseValidator.validateFieldExists(response, "code");
+        ResponseValidator.validateFieldExists(response, "message");
+        ResponseValidator.validateFieldExists(response, "type");
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatUploadImageShouldReturn404WhenPetNotFound() {
         long petId = PetDF.getNonexistentPetId();
         String metadata = "test metadata";
-        Response response = apiClient.post(petEndpoints.UPLOAD_IMAGE, metadata, petId);
-        responseValidator.validateStatusCode(response, 404);
+        Response response = apiClient.post(PetEndpoints.UPLOAD_IMAGE, metadata, petId);
+        ResponseValidator.validateStatusCode(response, 404);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatUploadImageShouldReturnResponseWithinTimeLimit() {
         long petId = PetDF.getValidPetId();
         String metadata = "test metadata";
-        Response response = apiClient.post(petEndpoints.UPLOAD_IMAGE, metadata, petId);
-        responseValidator.validateResponseTime(response, 5000);
+        Response response = apiClient.post(PetEndpoints.UPLOAD_IMAGE, metadata, petId);
+        ResponseValidator.validateResponseTime(response, 5000);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatUploadImageShouldReturnProperContentType() {
         long petId = PetDF.getValidPetId();
         String metadata = "test metadata";
-        Response response = apiClient.post(petEndpoints.UPLOAD_IMAGE, metadata, petId);
-        responseValidator.validateContentType(response, "application/json");
+        Response response = apiClient.post(PetEndpoints.UPLOAD_IMAGE, metadata, petId);
+        ResponseValidator.validateContentType(response, "application/json");
     }
 
     @Test(groups = {"regression", "pet", "edge"})
     public void verifyThatUploadImageWithEmptyMetadataShouldReturn200() {
         long petId = PetDF.getValidPetId();
-        Response response = apiClient.post(petEndpoints.UPLOAD_IMAGE, "", petId);
-        responseValidator.validateStatusCode(response, 200);
+        Response response = apiClient.post(PetEndpoints.UPLOAD_IMAGE, "", petId);
+        ResponseValidator.validateStatusCode(response, 200);
     }
 }

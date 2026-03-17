@@ -1,6 +1,6 @@
 package endpoints;
 
-public class petEndpoints {
+public class PetEndpoints {
     public static final String PET_BASE = "/pet";
     public static final String ADD_PET = "/pet";
     public static final String UPDATE_PET = "/pet";

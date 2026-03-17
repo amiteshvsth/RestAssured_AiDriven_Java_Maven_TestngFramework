@@ -1,6 +1,6 @@
 package config;
 
-public class appConfig {
+public class AppConfig {
     private static final String BASE_URL = "https://petstore.swagger.io/v2";
 
     public static String getBaseUrl() {

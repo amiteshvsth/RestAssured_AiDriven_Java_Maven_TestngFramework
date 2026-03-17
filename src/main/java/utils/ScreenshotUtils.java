@@ -34,7 +34,7 @@ public class ScreenshotUtils {
             Files.write(new File(filePath).toPath(), screenshotBytes);
             return filePath;
         } catch (IOException e) {
-            logger.error("Failed to capture screenshot: " + e.getMessage());
+            Logger.error("Failed to capture screenshot: " + e.getMessage());
             return null;
         }
     }
@@ -48,7 +48,7 @@ public class ScreenshotUtils {
             ImageIO.write(screenImage, "png", baos);
             return baos.toByteArray();
         } catch (Exception e) {
-            logger.error("Failed to capture desktop screenshot: " + e.getMessage());
+            Logger.error("Failed to capture desktop screenshot: " + e.getMessage());
             return new byte[0];
         }
     }
@@ -65,7 +65,7 @@ public class ScreenshotUtils {
                         screenshotBytes
                 );
             } catch (IOException e) {
-                logger.error("Failed to attach screenshot to Allure: " + e.getMessage());
+                Logger.error("Failed to attach screenshot to Allure: " + e.getMessage());
             }
         }
     }
@@ -89,7 +89,7 @@ public class ScreenshotUtils {
                     getStackTrace(throwable));
             AllureUtils.addTextAttachment("Failure_Details", failureInfo);
         } catch (Exception e) {
-            logger.error("Failed to attach failure screenshot: " + e.getMessage());
+            Logger.error("Failed to attach failure screenshot: " + e.getMessage());
         }
     }
 

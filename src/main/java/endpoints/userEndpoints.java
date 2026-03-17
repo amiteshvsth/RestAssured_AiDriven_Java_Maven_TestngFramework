@@ -1,6 +1,6 @@
 package endpoints;
 
-public class userEndpoints {
+public class UserEndpoints {
     public static final String USER_BASE = "/user";
     public static final String CREATE_USER = "/user";
     public static final String CREATE_USER_WITH_ARRAY = "/user/createWithArray";

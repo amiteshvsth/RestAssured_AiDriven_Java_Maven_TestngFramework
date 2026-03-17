@@ -1,8 +1,7 @@
 package dto.request.pet;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import dto.response.pet.Category;
-import dto.response.pet.Tag;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
