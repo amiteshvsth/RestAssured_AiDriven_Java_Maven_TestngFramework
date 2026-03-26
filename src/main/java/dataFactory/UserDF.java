@@ -1,135 +1,84 @@
 package dataFactory;
 
+import com.github.javafaker.Faker;
 import dto.user.CreateUserRequest;
 import dto.user.CreateUsersWithArrayRequest;
 import dto.user.CreateUsersWithListRequest;
 import dto.user.UpdateUserRequest;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDF {
 
-    public static CreateUsersWithArrayRequest createValidCreateUsersWithArrayRequest() {
-        return CreateUsersWithArrayRequest.builder()
-                .users(createMultipleUserRequests())
-                .build();
+    private static final Faker faker = new Faker();
+
+    public static CreateUserRequest getData() {
+        CreateUserRequest request = new CreateUserRequest();
+        request.setId(faker.number().randomNumber());
+        request.setUsername(faker.name().username().replace(".", "").toLowerCase());
+        request.setFirstName(faker.name().firstName());
+        request.setLastName(faker.name().lastName());
+        request.setEmail(faker.internet().emailAddress());
+        request.setPassword(faker.internet().password(8, 16));
+        request.setPhone(faker.phoneNumber().cellPhone());
+        request.setUserStatus(1);
+        return request;
     }
 
-    public static CreateUsersWithListRequest createValidCreateUsersWithListRequest() {
-        return CreateUsersWithListRequest.builder()
-                .users(createMultipleUserRequests())
-                .build();
+    public static UpdateUserRequest getUpdateData() {
+        UpdateUserRequest request = new UpdateUserRequest();
+        request.setId(faker.number().randomNumber());
+        request.setUsername(faker.name().username().replace(".", "").toLowerCase());
+        request.setFirstName(faker.name().firstName());
+        request.setLastName(faker.name().lastName());
+        request.setEmail(faker.internet().emailAddress());
+        request.setPassword(faker.internet().password(8, 16));
+        request.setPhone(faker.phoneNumber().cellPhone());
+        request.setUserStatus(1);
+        return request;
     }
 
-    public static CreateUserRequest createValidCreateUserRequest() {
-        return CreateUserRequest.builder()
-                .id(1L)
-                .username("johndoe")
-                .firstName("John")
-                .lastName("Doe")
-                .email("johndoe@example.com")
-                .password("password123")
-                .phone("1234567890")
-                .userStatus(1)
-                .build();
+    public static CreateUsersWithArrayRequest getArrayData() {
+        CreateUsersWithArrayRequest request = new CreateUsersWithArrayRequest();
+        request.setUsers(createMultipleUserRequests());
+        return request;
     }
 
-    public static CreateUserRequest createCreateUserRequestWithMinimalData() {
-        return CreateUserRequest.builder()
-                .username("janedoe")
-                .email("janedoe@example.com")
-                .password("password123")
-                .build();
+    public static CreateUsersWithListRequest getListData() {
+        CreateUsersWithListRequest request = new CreateUsersWithListRequest();
+        request.setUsers(createMultipleUserRequests());
+        return request;
     }
 
-    public static CreateUserRequest createCreateUserRequestWithInvalidEmail() {
-        return CreateUserRequest.builder()
-                .username("testuser")
-                .email("invalid-email")
-                .password("password123")
-                .build();
-    }
-
-    public static CreateUserRequest createCreateUserRequestWithEmptyPayload() {
-        return CreateUserRequest.builder().build();
-    }
-
-    public static UpdateUserRequest createValidUpdateUserRequest() {
-        return UpdateUserRequest.builder()
-                .id(1L)
-                .username("johndoe")
-                .firstName("JohnUpdated")
-                .lastName("DoeUpdated")
-                .email("johndoe.updated@example.com")
-                .password("newpassword456")
-                .phone("0987654321")
-                .userStatus(1)
-                .build();
-    }
-
-    public static List<CreateUserRequest> createMultipleUserRequests() {
-        return Arrays.asList(
-                CreateUserRequest.builder()
-                        .id(1L)
-                        .username("user1")
-                        .firstName("User")
-                        .lastName("One")
-                        .email("user1@example.com")
-                        .password("password1")
-                        .build(),
-                CreateUserRequest.builder()
-                        .id(2L)
-                        .username("user2")
-                        .firstName("User")
-                        .lastName("Two")
-                        .email("user2@example.com")
-                        .password("password2")
-                        .build(),
-                CreateUserRequest.builder()
-                        .id(3L)
-                        .username("user3")
-                        .firstName("User")
-                        .lastName("Three")
-                        .email("user3@example.com")
-                        .password("password3")
-                        .build()
-        );
-    }
-
-    public static UpdateUserRequest createUpdateUserRequestWithInvalidEmail() {
-        return UpdateUserRequest.builder()
-                .username("johndoe")
-                .email("invalid-email-format")
-                .password("password123")
-                .build();
-    }
-
-    public static UpdateUserRequest createUpdateUserRequestWithEmptyPayload() {
-        return UpdateUserRequest.builder().build();
+    private static List<CreateUserRequest> createMultipleUserRequests() {
+        List<CreateUserRequest> users = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            CreateUserRequest request = new CreateUserRequest();
+            request.setId(faker.number().randomNumber());
+            request.setUsername(faker.name().username().replace(".", "").toLowerCase());
+            request.setFirstName(faker.name().firstName());
+            request.setLastName(faker.name().lastName());
+            request.setEmail(faker.internet().emailAddress());
+            request.setPassword(faker.internet().password(8, 16));
+            users.add(request);
+        }
+        return users;
     }
 
     public static String getValidUsername() {
-        return "johndoe";
+        return faker.name().username().replace(".", "").toLowerCase();
     }
 
     public static String getNonexistentUsername() {
-        return "nonexistentuser12345";
+        return "nonexistentuser" + faker.number().randomNumber();
     }
 
     public static String getInvalidUsername() {
         return "!!invalid";
     }
 
-    public static String getNonexistentUserForUpdate() {
-        return "nonexistentuser999";
-    }
-
-    public static String getValidLoginUsername() {
-        return "johndoe";
-    }
-
-    public static String getValidLoginPassword() {
-        return "password123";
+    public static String getValidPassword() {
+        return faker.internet().password(8, 16);
     }
 }

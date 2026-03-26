@@ -12,7 +12,7 @@ public class PlaceOrderTests extends BaseApiTest {
 
     @Test(groups = {"smoke", "regression", "store", "positive"})
     public void verifyThatPlaceOrderShouldReturn200WhenValidPayload() {
-        PlaceOrderRequest request = StoreDF.createValidPlaceOrderRequest();
+        PlaceOrderRequest request = StoreDF.getData();
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateStatusCode(response, 200);
         ResponseValidator.validateFieldExists(response, "id");
@@ -20,7 +20,9 @@ public class PlaceOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatPlaceOrderShouldReturn200WhenMinimalDataProvided() {
-        PlaceOrderRequest request = StoreDF.createPlaceOrderRequestWithMinimalData();
+        PlaceOrderRequest request = StoreDF.getData();
+        request.setShipDate(null);
+        request.setComplete(null);
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateStatusCode(response, 200);
         ResponseValidator.validateFieldExists(response, "id");
@@ -28,21 +30,21 @@ public class PlaceOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatPlaceOrderShouldReturnResponseWithinTimeLimit() {
-        PlaceOrderRequest request = StoreDF.createValidPlaceOrderRequest();
+        PlaceOrderRequest request = StoreDF.getData();
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateResponseTime(response, 3000);
     }
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatPlaceOrderShouldReturnProperContentType() {
-        PlaceOrderRequest request = StoreDF.createValidPlaceOrderRequest();
+        PlaceOrderRequest request = StoreDF.getData();
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateContentType(response, "application/json");
     }
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatPlaceOrderShouldReturnAllRequiredFields() {
-        PlaceOrderRequest request = StoreDF.createValidPlaceOrderRequest();
+        PlaceOrderRequest request = StoreDF.getData();
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateFieldExists(response, "id");
         ResponseValidator.validateFieldExists(response, "petId");
@@ -53,7 +55,9 @@ public class PlaceOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatPlaceOrderWithCompleteStatusShouldReturn200() {
-        PlaceOrderRequest request = StoreDF.createPlaceOrderRequestWithCompleteStatus();
+        PlaceOrderRequest request = StoreDF.getData();
+        request.setStatus("approved");
+        request.setComplete(true);
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateStatusCode(response, 200);
         ResponseValidator.validateJsonFieldEquals(response, "status", "approved");
@@ -62,7 +66,9 @@ public class PlaceOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatPlaceOrderWithDeliveredStatusShouldReturn200() {
-        PlaceOrderRequest request = StoreDF.createPlaceOrderRequestWithDeliveredStatus();
+        PlaceOrderRequest request = StoreDF.getData();
+        request.setStatus("delivered");
+        request.setComplete(true);
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateStatusCode(response, 200);
         ResponseValidator.validateJsonFieldEquals(response, "status", "delivered");
@@ -70,21 +76,23 @@ public class PlaceOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "negative"})
     public void verifyThatPlaceOrderWithInvalidQuantityShouldReturn200() {
-        PlaceOrderRequest request = StoreDF.createPlaceOrderRequestWithInvalidQuantity();
+        PlaceOrderRequest request = StoreDF.getData();
+        request.setQuantity(0);
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateStatusCode(response, 200);
     }
 
     @Test(groups = {"regression", "store", "edge"})
     public void verifyThatPlaceOrderWithEmptyPayloadShouldReturn200() {
-        PlaceOrderRequest request = StoreDF.createPlaceOrderRequestWithEmptyPayload();
+        PlaceOrderRequest request = new PlaceOrderRequest();
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateStatusCode(response, 200);
     }
 
     @Test(groups = {"regression", "store", "edge"})
     public void verifyThatPlaceOrderWithNegativeQuantityShouldReturn200() {
-        PlaceOrderRequest request = StoreDF.createPlaceOrderRequestWithNegativeQuantity();
+        PlaceOrderRequest request = StoreDF.getData();
+        request.setQuantity(-1);
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         ResponseValidator.validateStatusCode(response, 200);
     }

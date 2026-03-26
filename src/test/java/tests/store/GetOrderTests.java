@@ -11,7 +11,7 @@ public class GetOrderTests extends BaseApiTest {
 
     @Test(groups = {"smoke", "regression", "store", "positive"})
     public void verifyThatGetOrderShouldReturn200WhenOrderExists() {
-        long orderId = StoreDF.getValidOrderId();
+        long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
         ResponseValidator.validateStatusCode(response, 200);
         ResponseValidator.validateJsonFieldEquals(response, "id", orderId);
@@ -22,7 +22,7 @@ public class GetOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "negative"})
     public void verifyThatGetOrderShouldReturn404WhenOrderNotFound() {
-        long orderId = StoreDF.getNonexistentOrderId();
+        long orderId = StoreDF.getNonexistentId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
         ResponseValidator.validateStatusCode(response, 404);
         ResponseValidator.validateJsonFieldEquals(response, "code", 404);
@@ -30,21 +30,21 @@ public class GetOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatGetOrderShouldReturnResponseWithinTimeLimit() {
-        long orderId = StoreDF.getValidOrderId();
+        long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
         ResponseValidator.validateResponseTime(response, 3000);
     }
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatGetOrderShouldReturnProperContentType() {
-        long orderId = StoreDF.getValidOrderId();
+        long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
         ResponseValidator.validateContentType(response, "application/json");
     }
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatGetOrderShouldReturnAllRequiredFields() {
-        long orderId = StoreDF.getValidOrderId();
+        long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
         ResponseValidator.validateFieldExists(response, "id");
         ResponseValidator.validateFieldExists(response, "petId");
@@ -55,7 +55,7 @@ public class GetOrderTests extends BaseApiTest {
 
     @Test(groups = {"regression", "store", "negative"})
     public void verifyThatGetOrderWithInvalidIdShouldReturn404() {
-        long orderId = StoreDF.getInvalidOrderId();
+        long orderId = StoreDF.getInvalidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
         ResponseValidator.validateStatusCode(response, 404);
     }

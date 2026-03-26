@@ -11,7 +11,7 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturn200WhenPetExists() {
-        long petId = PetDF.getValidPetId();
+        long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
         ResponseValidator.validateStatusCode(response, 200);
         ResponseValidator.validateFieldExists(response, "id");
@@ -21,7 +21,7 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetShouldReturn404WhenPetNotFound() {
-        long petId = PetDF.getNonexistentPetId();
+        long petId = PetDF.getNonexistentId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
         ResponseValidator.validateStatusCode(response, 404);
         ResponseValidator.validateJsonFieldEquals(response, "code", 404);
@@ -29,21 +29,21 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnResponseWithinTimeLimit() {
-        long petId = PetDF.getValidPetId();
+        long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
         ResponseValidator.validateResponseTime(response, 3000);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnProperContentType() {
-        long petId = PetDF.getValidPetId();
+        long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
         ResponseValidator.validateContentType(response, "application/json");
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnAllRequiredFields() {
-        long petId = PetDF.getValidPetId();
+        long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
         ResponseValidator.validateFieldExists(response, "id");
         ResponseValidator.validateFieldExists(response, "name");
@@ -54,7 +54,7 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetByInvalidIdShouldReturn404() {
-        long petId = PetDF.getInvalidPetId();
+        long petId = PetDF.getInvalidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
         ResponseValidator.validateStatusCode(response, 404);
     }

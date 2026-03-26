@@ -7,7 +7,7 @@ import io.restassured.response.Response;
 import org.testng.annotations.Test;
 import validators.ResponseValidator;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
 
 public class GetUserTests extends BaseApiTest {
 

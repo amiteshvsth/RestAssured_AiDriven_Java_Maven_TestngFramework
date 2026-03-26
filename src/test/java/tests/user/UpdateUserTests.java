@@ -13,7 +13,7 @@ public class UpdateUserTests extends BaseApiTest {
     @Test(groups = {"smoke", "regression", "user", "positive"})
     public void verifyThatUpdateUserShouldReturn200WhenValidPayload() {
         String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.createValidUpdateUserRequest();
+        UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         ResponseValidator.validateStatusCode(response, 200);
         ResponseValidator.validateJsonFieldEquals(response, "code", 200);
@@ -22,8 +22,8 @@ public class UpdateUserTests extends BaseApiTest {
 
     @Test(groups = {"regression", "user", "negative"})
     public void verifyThatUpdateUserShouldReturn200ForNonexistentUser() {
-        String username = UserDF.getNonexistentUserForUpdate();
-        UpdateUserRequest request = UserDF.createValidUpdateUserRequest();
+        String username = UserDF.getNonexistentUsername();
+        UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         ResponseValidator.validateStatusCode(response, 200);
     }
@@ -31,7 +31,7 @@ public class UpdateUserTests extends BaseApiTest {
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatUpdateUserShouldReturnResponseWithinTimeLimit() {
         String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.createValidUpdateUserRequest();
+        UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         ResponseValidator.validateResponseTime(response, 3000);
     }
@@ -39,7 +39,7 @@ public class UpdateUserTests extends BaseApiTest {
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatUpdateUserShouldReturnProperContentType() {
         String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.createValidUpdateUserRequest();
+        UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         ResponseValidator.validateContentType(response, "application/json");
     }
@@ -47,7 +47,8 @@ public class UpdateUserTests extends BaseApiTest {
     @Test(groups = {"regression", "user", "negative"})
     public void verifyThatUpdateUserWithInvalidEmailShouldReturn200() {
         String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.createUpdateUserRequestWithInvalidEmail();
+        UpdateUserRequest request = UserDF.getUpdateData();
+        request.setEmail("invalid-email-format");
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         ResponseValidator.validateStatusCode(response, 200);
     }
@@ -55,7 +56,7 @@ public class UpdateUserTests extends BaseApiTest {
     @Test(groups = {"regression", "user", "edge"})
     public void verifyThatUpdateUserWithEmptyPayloadShouldReturn200() {
         String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.createUpdateUserRequestWithEmptyPayload();
+        UpdateUserRequest request = new UpdateUserRequest();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         ResponseValidator.validateStatusCode(response, 200);
     }

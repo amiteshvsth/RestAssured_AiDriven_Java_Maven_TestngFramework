@@ -1,88 +1,83 @@
 package dataFactory;
 
+import com.github.javafaker.Faker;
 import dto.pet.AddPetRequest;
-import dto.pet.Category;
-import dto.pet.Tag;
+import dto.pet.CategoryRequest;
+import dto.pet.TagRequest;
 import dto.pet.UpdatePetRequest;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PetDF {
 
-    public static AddPetRequest createValidAddPetRequest() {
-        return AddPetRequest.builder()
-                .id(1L)
-                .name("doggie")
-                .photoUrls(Arrays.asList("http://example.com/photo1.jpg", "http://example.com/photo2.jpg"))
-                .status("available")
-                .category(Category.builder().id(1L).name("Dogs").build())
-                .tags(Arrays.asList(
-                        Tag.builder().id(1L).name("cute").build(),
-                        Tag.builder().id(2L).name("friendly").build()
-                ))
-                .build();
+    private static final Faker faker = new Faker();
+
+    public static AddPetRequest getData() {
+        AddPetRequest request = new AddPetRequest();
+        request.setId(faker.number().randomNumber());
+        request.setName(faker.animal().name());
+
+        CategoryRequest category = new CategoryRequest();
+        category.setId(faker.number().randomNumber());
+        category.setName(faker.commerce().productName());
+        request.setCategory(category);
+
+        List<String> photoUrls = new ArrayList<>();
+        photoUrls.add(faker.internet().url());
+        photoUrls.add(faker.internet().url());
+        request.setPhotoUrls(photoUrls);
+
+        List<TagRequest> tags = new ArrayList<>();
+        TagRequest tag1 = new TagRequest();
+        tag1.setId(faker.number().randomNumber());
+        tag1.setName(faker.color().name().toLowerCase());
+        tags.add(tag1);
+
+        TagRequest tag2 = new TagRequest();
+        tag2.setId(faker.number().randomNumber());
+        tag2.setName(faker.commerce().material());
+        tags.add(tag2);
+        request.setTags(tags);
+
+        request.setStatus("available");
+        return request;
     }
 
-    public static AddPetRequest createAddPetRequestWithMinimalData() {
-        return AddPetRequest.builder()
-                .name("catty")
-                .photoUrls(Arrays.asList("http://example.com/cat.jpg"))
-                .status("available")
-                .build();
+    public static UpdatePetRequest getUpdateData() {
+        UpdatePetRequest request = new UpdatePetRequest();
+        request.setId(faker.number().randomNumber());
+        request.setName(faker.animal().name());
+
+        CategoryRequest category = new CategoryRequest();
+        category.setId(faker.number().randomNumber());
+        category.setName(faker.commerce().productName());
+        request.setCategory(category);
+
+        List<String> photoUrls = new ArrayList<>();
+        photoUrls.add(faker.internet().url());
+        request.setPhotoUrls(photoUrls);
+
+        List<TagRequest> tags = new ArrayList<>();
+        TagRequest tag = new TagRequest();
+        tag.setId(faker.number().randomNumber());
+        tag.setName(faker.color().name().toLowerCase());
+        tags.add(tag);
+        request.setTags(tags);
+
+        request.setStatus("pending");
+        return request;
     }
 
-    public static UpdatePetRequest createValidUpdatePetRequest() {
-        return UpdatePetRequest.builder()
-                .id(1L)
-                .name("doggie_updated")
-                .photoUrls(Arrays.asList("http://example.com/photo1.jpg"))
-                .status("pending")
-                .category(Category.builder().id(1L).name("Dogs").build())
-                .tags(Arrays.asList(
-                        Tag.builder().id(1L).name("playful").build()
-                ))
-                .build();
+    public static Long getValidId() {
+        return faker.number().randomNumber();
     }
 
-    public static AddPetRequest createAddPetRequestWithInvalidStatus() {
-        return AddPetRequest.builder()
-                .name("testpet")
-                .status("invalid_status")
-                .build();
-    }
-
-    public static AddPetRequest createAddPetRequestWithEmptyPayload() {
-        return AddPetRequest.builder().build();
-    }
-
-    public static AddPetRequest createAddPetRequestWithNullName() {
-        return AddPetRequest.builder()
-                .name(null)
-                .status("available")
-                .build();
-    }
-
-    public static UpdatePetRequest createUpdatePetRequestWithInvalidId() {
-        return UpdatePetRequest.builder()
-                .id(999999999L)
-                .name("nonexistent")
-                .status("available")
-                .build();
-    }
-
-    public static UpdatePetRequest createUpdatePetRequestWithEmptyPayload() {
-        return UpdatePetRequest.builder().build();
-    }
-
-    public static Long getValidPetId() {
-        return 1L;
-    }
-
-    public static Long getNonexistentPetId() {
+    public static Long getNonexistentId() {
         return 999999999L;
     }
 
-    public static Long getInvalidPetId() {
+    public static Long getInvalidId() {
         return -1L;
     }
 
@@ -95,6 +90,6 @@ public class PetDF {
     }
 
     public static String getValidTag() {
-        return "cute";
+        return faker.color().name().toLowerCase();
     }
 }
