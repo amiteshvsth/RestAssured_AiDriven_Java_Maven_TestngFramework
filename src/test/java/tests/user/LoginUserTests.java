@@ -14,7 +14,9 @@ public class LoginUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         String password = UserDF.getValidPassword();
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 200);
     }
 
     @Test(groups = {"regression", "user", "negative"})
@@ -22,7 +24,9 @@ public class LoginUserTests extends BaseApiTest {
         String username = UserDF.getInvalidUsername();
         String password = "wrongpassword";
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 200);
     }
 
     @Test(groups = {"regression", "user", "negative"})
@@ -30,7 +34,9 @@ public class LoginUserTests extends BaseApiTest {
         String username = UserDF.getNonexistentUsername();
         String password = "password";
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 200);
     }
 
     @Test(groups = {"regression", "user", "positive"})
@@ -38,7 +44,9 @@ public class LoginUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         String password = UserDF.getValidPassword();
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        Assert.assertTrue(response.getTime() < 3000);
+        long responseTime = response.getTime();
+        
+        Assert.assertTrue(responseTime < 3000);
     }
 
     @Test(groups = {"regression", "user", "positive"})
@@ -46,7 +54,9 @@ public class LoginUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         String password = UserDF.getValidPassword();
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        Assert.assertTrue(response.getContentType().contains("application/json"));
+        String contentType = response.getContentType();
+        
+        Assert.assertTrue(contentType.contains("application/json"));
     }
 
     @Test(groups = {"regression", "user", "edge"})
@@ -54,7 +64,9 @@ public class LoginUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         String password = "";
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 200);
     }
 
     @Test(groups = {"regression", "user", "edge"})
@@ -62,6 +74,8 @@ public class LoginUserTests extends BaseApiTest {
         String username = "";
         String password = UserDF.getValidPassword();
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 200);
     }
 }

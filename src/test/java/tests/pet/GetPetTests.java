@@ -6,6 +6,7 @@ import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 public class GetPetTests extends BaseApiTest {
 
@@ -13,71 +14,112 @@ public class GetPetTests extends BaseApiTest {
     public void verifyThatGetPetShouldReturn200WhenPetExists() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        Assert.assertEquals(response.getStatusCode(), 200);
-        Assert.assertNotNull(response.jsonPath().get("id"));
-        Assert.assertNotNull(response.jsonPath().get("name"));
-        Assert.assertNotNull(response.jsonPath().get("status"));
+        int statusCode = response.getStatusCode();
+        Object responseId = response.jsonPath().get("id");
+        Object responseName = response.jsonPath().get("name");
+        Object responseStatus = response.jsonPath().get("status");
+        
+        Assert.assertEquals(statusCode, 200);
+        
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotNull(responseId);
+        softAssert.assertNotNull(responseName);
+        softAssert.assertNotNull(responseStatus);
+        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetShouldReturn404WhenPetNotFound() {
         long petId = PetDF.getNonexistentId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        Assert.assertEquals(response.getStatusCode(), 404);
-        Assert.assertEquals(response.jsonPath().getInt("code"), 404);
+        int statusCode = response.getStatusCode();
+        int responseCode = response.jsonPath().getInt("code");
+        
+        Assert.assertEquals(statusCode, 404);
+        
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertEquals(responseCode, 404);
+        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnResponseWithinTimeLimit() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        Assert.assertTrue(response.getTime() < 3000);
+        long responseTime = response.getTime();
+        
+        Assert.assertTrue(responseTime < 3000);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnProperContentType() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        Assert.assertTrue(response.getContentType().contains("application/json"));
+        String contentType = response.getContentType();
+        
+        Assert.assertTrue(contentType.contains("application/json"));
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnAllRequiredFields() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        Assert.assertNotNull(response.jsonPath().get("id"));
-        Assert.assertNotNull(response.jsonPath().get("name"));
-        Assert.assertNotNull(response.jsonPath().get("photoUrls"));
-        Assert.assertNotNull(response.jsonPath().get("tags"));
-        Assert.assertNotNull(response.jsonPath().get("status"));
+        Object responseId = response.jsonPath().get("id");
+        Object responseName = response.jsonPath().get("name");
+        Object responsePhotoUrls = response.jsonPath().get("photoUrls");
+        Object responseTags = response.jsonPath().get("tags");
+        Object responseStatus = response.jsonPath().get("status");
+        
+        int statusCode = response.getStatusCode();
+        Assert.assertEquals(statusCode, 200);
+        
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotNull(responseId);
+        softAssert.assertNotNull(responseName);
+        softAssert.assertNotNull(responsePhotoUrls);
+        softAssert.assertNotNull(responseTags);
+        softAssert.assertNotNull(responseStatus);
+        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetByInvalidIdShouldReturn404() {
         long petId = PetDF.getInvalidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        Assert.assertEquals(response.getStatusCode(), 404);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 404);
     }
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatFindPetsByStatusShouldReturn200() {
         String status = PetDF.getAvailableStatus();
         Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_STATUS + "?status=" + status);
-        Assert.assertEquals(response.getStatusCode(), 200);
-        Assert.assertFalse(response.jsonPath().getList("").isEmpty());
+        int statusCode = response.getStatusCode();
+        boolean petsListNotEmpty = !response.jsonPath().getList("").isEmpty();
+        
+        Assert.assertEquals(statusCode, 200);
+        
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertFalse(petsListNotEmpty);
+        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatFindPetsByStatusShouldReturnEmptyArrayForInvalidStatus() {
         String status = PetDF.getInvalidStatus();
         Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_STATUS + "?status=" + status);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 200);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatFindPetsByTagsShouldReturn200() {
         String tag = PetDF.getValidTag();
         Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_TAGS + "?tags=" + tag);
-        Assert.assertEquals(response.getStatusCode(), 200);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 200);
     }
 }
