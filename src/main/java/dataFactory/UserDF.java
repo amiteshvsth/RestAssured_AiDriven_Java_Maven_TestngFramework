@@ -26,44 +26,44 @@ public class UserDF {
         return request;
     }
 
-    public static UpdateUserRequest getUpdateData() {
+    public static UpdateUserRequest getDataAsUpdateUserRequest() {
         UpdateUserRequest request = new UpdateUserRequest();
-        request.setId(faker.number().randomNumber());
         request.setUsername(faker.name().username().replace(".", "").toLowerCase());
-        request.setFirstName(faker.name().firstName());
-        request.setLastName(faker.name().lastName());
-        request.setEmail(faker.internet().emailAddress());
-        request.setPassword(faker.internet().password(8, 16));
-        request.setPhone(faker.phoneNumber().cellPhone());
-        request.setUserStatus(1);
         return request;
     }
 
     public static CreateUsersWithArrayRequest getArrayData() {
         CreateUsersWithArrayRequest request = new CreateUsersWithArrayRequest();
-        request.setUsers(createMultipleUserRequests());
+        List<CreateUserRequest> users = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            CreateUserRequest user = new CreateUserRequest();
+            user.setId(faker.number().randomNumber());
+            user.setUsername(faker.name().username().replace(".", "").toLowerCase());
+            user.setFirstName(faker.name().firstName());
+            user.setLastName(faker.name().lastName());
+            user.setEmail(faker.internet().emailAddress());
+            user.setPassword(faker.internet().password(8, 16));
+            users.add(user);
+        }
+        request.setUsers(users);
         return request;
     }
 
     public static CreateUsersWithListRequest getListData() {
         CreateUsersWithListRequest request = new CreateUsersWithListRequest();
-        request.setUsers(createMultipleUserRequests());
-        return request;
-    }
-
-    private static List<CreateUserRequest> createMultipleUserRequests() {
         List<CreateUserRequest> users = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            CreateUserRequest request = new CreateUserRequest();
-            request.setId(faker.number().randomNumber());
-            request.setUsername(faker.name().username().replace(".", "").toLowerCase());
-            request.setFirstName(faker.name().firstName());
-            request.setLastName(faker.name().lastName());
-            request.setEmail(faker.internet().emailAddress());
-            request.setPassword(faker.internet().password(8, 16));
-            users.add(request);
+            CreateUserRequest user = new CreateUserRequest();
+            user.setId(faker.number().randomNumber());
+            user.setUsername(faker.name().username().replace(".", "").toLowerCase());
+            user.setFirstName(faker.name().firstName());
+            user.setLastName(faker.name().lastName());
+            user.setEmail(faker.internet().emailAddress());
+            user.setPassword(faker.internet().password(8, 16));
+            users.add(user);
         }
-        return users;
+        request.setUsers(users);
+        return request;
     }
 
     public static String getValidUsername() {

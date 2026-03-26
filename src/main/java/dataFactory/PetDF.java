@@ -44,7 +44,7 @@ public class PetDF {
         return request;
     }
 
-    public static UpdatePetRequest getUpdateData() {
+    public static UpdatePetRequest getDataAsUpdatePetRequest() {
         UpdatePetRequest request = new UpdatePetRequest();
         request.setId(faker.number().randomNumber());
         request.setName(faker.animal().name());

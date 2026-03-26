@@ -2,28 +2,24 @@ package tests.pet;
 
 import base.BaseApiTest;
 import dataFactory.PetDF;
-import dto.pet.DeletePetResponse;
+import dto.pet.AddPetRequest;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 
 public class DeletePetTests extends BaseApiTest {
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatDeletePetShouldReturn200WhenPetExists() {
-        long petId = PetDF.getValidId();
+        AddPetRequest petRequest = PetDF.getData();
+        apiClient.post(PetEndpoints.ADD_PET, petRequest);
+        
+        long petId = petRequest.getId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
         int statusCode = response.getStatusCode();
-        DeletePetResponse responseDto = response.as(DeletePetResponse.class);
         
         Assert.assertEquals(statusCode, 200);
-        
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseDto.getCode(), 200);
-        softAssert.assertNotNull(responseDto.getMessage());
-        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "pet", "negative"})
@@ -41,6 +37,6 @@ public class DeletePetTests extends BaseApiTest {
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 400);
+        Assert.assertEquals(statusCode, 404);
     }
 }

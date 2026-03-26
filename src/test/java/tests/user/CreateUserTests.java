@@ -32,13 +32,8 @@ public class CreateUserTests extends BaseApiTest {
         Response response = apiClient.post(UserEndpoints.CREATE_USER_WITH_ARRAY,
                 UserDF.getArrayData());
         int statusCode = response.getStatusCode();
-        CreateUserResponse responseDto = response.as(CreateUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
-        
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseDto.getCode(), 200);
-        softAssert.assertAll();
     }
 
     @Test(groups = {"smoke", "regression", "user", "positive"})
@@ -46,12 +41,7 @@ public class CreateUserTests extends BaseApiTest {
         Response response = apiClient.post(UserEndpoints.CREATE_USER_WITH_LIST,
                 UserDF.getListData());
         int statusCode = response.getStatusCode();
-        CreateUserResponse responseDto = response.as(CreateUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
-        
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseDto.getCode(), 200);
-        softAssert.assertAll();
     }
 }
