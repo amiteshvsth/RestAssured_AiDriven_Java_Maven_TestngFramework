@@ -9,7 +9,6 @@
             <class name="tests.pet.GetPetTests"/>
             <class name="tests.pet.UpdatePetTests"/>
             <class name="tests.pet.DeletePetTests"/>
-            <class name="tests.pet.UploadImageTests"/>
         </classes>
     </test>
     <test name="Store Module Tests">

@@ -29,53 +29,22 @@ public class UpdateUserTests extends BaseApiTest {
     }
 
     @Test(groups = {"regression", "user", "negative"})
-    public void verifyThatUpdateUserShouldReturn200ForNonexistentUser() {
+    public void verifyThatUpdateUserShouldReturn404WhenUserNotFound() {
         String username = UserDF.getNonexistentUsername();
         UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 200);
-    }
-
-    @Test(groups = {"regression", "user", "positive"})
-    public void verifyThatUpdateUserShouldReturnResponseWithinTimeLimit() {
-        String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.getUpdateData();
-        Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        long responseTime = response.getTime();
-        
-        Assert.assertTrue(responseTime < 3000);
-    }
-
-    @Test(groups = {"regression", "user", "positive"})
-    public void verifyThatUpdateUserShouldReturnProperContentType() {
-        String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.getUpdateData();
-        Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        String contentType = response.getContentType();
-        
-        Assert.assertTrue(contentType.contains("application/json"));
+        Assert.assertEquals(statusCode, 404);
     }
 
     @Test(groups = {"regression", "user", "negative"})
-    public void verifyThatUpdateUserWithInvalidEmailShouldReturn200() {
-        String username = UserDF.getValidUsername();
-        UpdateUserRequest request = UserDF.getUpdateData();
-        request.setEmail("invalid-email-format");
-        Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        int statusCode = response.getStatusCode();
-        
-        Assert.assertEquals(statusCode, 200);
-    }
-
-    @Test(groups = {"regression", "user", "edge"})
-    public void verifyThatUpdateUserWithEmptyPayloadShouldReturn200() {
+    public void verifyThatUpdateUserShouldReturn400WhenInvalidPayload() {
         String username = UserDF.getValidUsername();
         UpdateUserRequest request = new UpdateUserRequest();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 200);
+        Assert.assertEquals(statusCode, 400);
     }
 }

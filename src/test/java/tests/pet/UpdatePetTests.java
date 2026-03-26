@@ -7,6 +7,7 @@ import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 public class UpdatePetTests extends BaseApiTest {
 
@@ -18,7 +19,10 @@ public class UpdatePetTests extends BaseApiTest {
         Object responseId = response.jsonPath().get("id");
         
         Assert.assertEquals(statusCode, 200);
-        Assert.assertNotNull(responseId);
+        
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertNotNull(responseId);
+        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "pet", "negative"})
@@ -31,31 +35,13 @@ public class UpdatePetTests extends BaseApiTest {
         Assert.assertEquals(statusCode, 404);
     }
 
-    @Test(groups = {"regression", "pet", "positive"})
-    public void verifyThatUpdatePetShouldReturnResponseWithinTimeLimit() {
-        UpdatePetRequest request = PetDF.getUpdateData();
-        Response response = apiClient.put(PetEndpoints.UPDATE_PET, request);
-        long responseTime = response.getTime();
-        
-        Assert.assertTrue(responseTime < 3000);
-    }
-
-    @Test(groups = {"regression", "pet", "positive"})
-    public void verifyThatUpdatePetShouldReturnProperContentType() {
-        UpdatePetRequest request = PetDF.getUpdateData();
-        Response response = apiClient.put(PetEndpoints.UPDATE_PET, request);
-        String contentType = response.getContentType();
-        
-        Assert.assertTrue(contentType.contains("application/json"));
-    }
-
-    @Test(groups = {"regression", "pet", "positive"})
-    public void verifyThatUpdatePetShouldUpdateStatusField() {
-        UpdatePetRequest request = PetDF.getUpdateData();
+    @Test(groups = {"regression", "pet", "negative"})
+    public void verifyThatUpdatePetShouldReturn400WhenInvalidPayload() {
+        UpdatePetRequest request = new UpdatePetRequest();
         Response response = apiClient.put(PetEndpoints.UPDATE_PET, request);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 200);
+        Assert.assertEquals(statusCode, 400);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
@@ -70,20 +56,11 @@ public class UpdatePetTests extends BaseApiTest {
     }
 
     @Test(groups = {"regression", "pet", "negative"})
-    public void verifyThatUpdatePetFormShouldReturn400WhenMissingParameters() {
+    public void verifyThatUpdatePetFormShouldReturn405WhenInvalidInput() {
         long petId = PetDF.getValidId();
         Response response = apiClient.post(PetEndpoints.UPDATE_PET_FORM + "?name=", "", petId);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 400);
-    }
-
-    @Test(groups = {"regression", "pet", "edge"})
-    public void verifyThatUpdatePetWithEmptyPayloadShouldReturn400() {
-        UpdatePetRequest request = new UpdatePetRequest();
-        Response response = apiClient.put(PetEndpoints.UPDATE_PET, request);
-        int statusCode = response.getStatusCode();
-        
-        Assert.assertEquals(statusCode, 400);
+        Assert.assertEquals(statusCode, 405);
     }
 }

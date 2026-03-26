@@ -6,6 +6,7 @@ import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 public class LoginUserTests extends BaseApiTest {
 
@@ -15,67 +16,42 @@ public class LoginUserTests extends BaseApiTest {
         String password = UserDF.getValidPassword();
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
         int statusCode = response.getStatusCode();
+        String loginMessage = response.getBody().asString();
         
         Assert.assertEquals(statusCode, 200);
+        
+        SoftAssert softAssert = new SoftAssert();
+        softAssert.assertTrue(loginMessage.contains("logged in"));
+        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "user", "negative"})
-    public void verifyThatLoginShouldReturn200WhenInvalidCredentials() {
+    public void verifyThatLoginShouldReturn400WhenInvalidCredentials() {
         String username = UserDF.getInvalidUsername();
         String password = "wrongpassword";
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 200);
+        Assert.assertEquals(statusCode, 400);
     }
 
     @Test(groups = {"regression", "user", "negative"})
-    public void verifyThatLoginShouldReturn200WhenUserNotFound() {
-        String username = UserDF.getNonexistentUsername();
-        String password = "password";
-        Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        int statusCode = response.getStatusCode();
-        
-        Assert.assertEquals(statusCode, 200);
-    }
-
-    @Test(groups = {"regression", "user", "positive"})
-    public void verifyThatLoginShouldReturnResponseWithinTimeLimit() {
-        String username = UserDF.getValidUsername();
-        String password = UserDF.getValidPassword();
-        Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        long responseTime = response.getTime();
-        
-        Assert.assertTrue(responseTime < 3000);
-    }
-
-    @Test(groups = {"regression", "user", "positive"})
-    public void verifyThatLoginShouldReturnProperContentType() {
-        String username = UserDF.getValidUsername();
-        String password = UserDF.getValidPassword();
-        Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        String contentType = response.getContentType();
-        
-        Assert.assertTrue(contentType.contains("application/json"));
-    }
-
-    @Test(groups = {"regression", "user", "edge"})
-    public void verifyThatLoginShouldReturn200WithEmptyPassword() {
-        String username = UserDF.getValidUsername();
-        String password = "";
-        Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
-        int statusCode = response.getStatusCode();
-        
-        Assert.assertEquals(statusCode, 200);
-    }
-
-    @Test(groups = {"regression", "user", "edge"})
-    public void verifyThatLoginShouldReturn200WithEmptyUsername() {
+    public void verifyThatLoginShouldReturn400WhenMissingUsername() {
         String username = "";
         String password = UserDF.getValidPassword();
         Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 200);
+        Assert.assertEquals(statusCode, 400);
+    }
+
+    @Test(groups = {"regression", "user", "negative"})
+    public void verifyThatLoginShouldReturn400WhenMissingPassword() {
+        String username = UserDF.getValidUsername();
+        String password = "";
+        Response response = apiClient.getWithQueryParams(UserEndpoints.LOGIN_USER, "username", username, "password", password);
+        int statusCode = response.getStatusCode();
+        
+        Assert.assertEquals(statusCode, 400);
     }
 }

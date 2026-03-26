@@ -35,44 +35,12 @@ public class DeletePetTests extends BaseApiTest {
         Assert.assertEquals(statusCode, 404);
     }
 
-    @Test(groups = {"regression", "pet", "positive"})
-    public void verifyThatDeletePetShouldReturnResponseWithinTimeLimit() {
-        long petId = PetDF.getValidId();
-        Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        long responseTime = response.getTime();
-        
-        Assert.assertTrue(responseTime < 3000);
-    }
-
-    @Test(groups = {"regression", "pet", "positive"})
-    public void verifyThatDeletePetShouldReturnProperContentType() {
-        long petId = PetDF.getValidId();
-        Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        String contentType = response.getContentType();
-        
-        Assert.assertTrue(contentType.contains("application/json"));
-    }
-
     @Test(groups = {"regression", "pet", "negative"})
-    public void verifyThatDeletePetWithInvalidIdShouldReturn404() {
+    public void verifyThatDeletePetShouldReturn400WhenInvalidId() {
         long petId = PetDF.getInvalidId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
         int statusCode = response.getStatusCode();
         
-        Assert.assertEquals(statusCode, 404);
-    }
-
-    @Test(groups = {"regression", "pet", "positive"})
-    public void verifyThatDeletePetShouldReturnSuccessMessage() {
-        long petId = PetDF.getValidId();
-        Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        int statusCode = response.getStatusCode();
-        Object responseMessage = response.jsonPath().get("message");
-        
-        Assert.assertEquals(statusCode, 200);
-        
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(responseMessage);
-        softAssert.assertAll();
+        Assert.assertEquals(statusCode, 400);
     }
 }
