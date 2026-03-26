@@ -4,10 +4,8 @@ import base.BaseApiTest;
 import dataFactory.UserDF;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import validators.ResponseValidator;
-
-import static org.hamcrest.Matchers.containsString;
 
 public class GetUserTests extends BaseApiTest {
 
@@ -15,59 +13,59 @@ public class GetUserTests extends BaseApiTest {
     public void verifyThatGetUserShouldReturn200WhenUserExists() {
         String username = UserDF.getValidUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
-        ResponseValidator.validateStatusCode(response, 200);
-        ResponseValidator.validateJsonFieldEquals(response, "username", username);
-        ResponseValidator.validateFieldExists(response, "id");
-        ResponseValidator.validateFieldExists(response, "email");
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertEquals(response.jsonPath().getString("username"), username);
+        Assert.assertNotNull(response.jsonPath().get("id"));
+        Assert.assertNotNull(response.jsonPath().get("email"));
     }
 
     @Test(groups = {"regression", "user", "negative"})
     public void verifyThatGetUserShouldReturn404WhenUserNotFound() {
         String username = UserDF.getNonexistentUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
-        ResponseValidator.validateStatusCode(response, 404);
-        ResponseValidator.validateJsonFieldEquals(response, "code", 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
+        Assert.assertEquals(response.jsonPath().getInt("code"), 404);
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatGetUserShouldReturnResponseWithinTimeLimit() {
         String username = UserDF.getValidUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
-        ResponseValidator.validateResponseTime(response, 3000);
+        Assert.assertTrue(response.getTime() < 3000);
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatGetUserShouldReturnProperContentType() {
         String username = UserDF.getValidUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
-        ResponseValidator.validateContentType(response, "application/json");
+        Assert.assertTrue(response.getContentType().contains("application/json"));
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatGetUserShouldReturnAllRequiredFields() {
         String username = UserDF.getValidUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
-        ResponseValidator.validateFieldExists(response, "id");
-        ResponseValidator.validateFieldExists(response, "username");
-        ResponseValidator.validateFieldExists(response, "firstName");
-        ResponseValidator.validateFieldExists(response, "lastName");
-        ResponseValidator.validateFieldExists(response, "email");
-        ResponseValidator.validateFieldExists(response, "password");
-        ResponseValidator.validateFieldExists(response, "phone");
-        ResponseValidator.validateFieldExists(response, "userStatus");
+        Assert.assertNotNull(response.jsonPath().get("id"));
+        Assert.assertNotNull(response.jsonPath().get("username"));
+        Assert.assertNotNull(response.jsonPath().get("firstName"));
+        Assert.assertNotNull(response.jsonPath().get("lastName"));
+        Assert.assertNotNull(response.jsonPath().get("email"));
+        Assert.assertNotNull(response.jsonPath().get("password"));
+        Assert.assertNotNull(response.jsonPath().get("phone"));
+        Assert.assertNotNull(response.jsonPath().get("userStatus"));
     }
 
     @Test(groups = {"regression", "user", "negative"})
     public void verifyThatGetUserByInvalidUsernameShouldReturn404() {
         String username = UserDF.getInvalidUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
-        ResponseValidator.validateStatusCode(response, 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
     }
 
     @Test(groups = {"regression", "user", "positive"})
     public void verifyThatGetUserShouldReturnCorrectEmailFormat() {
         String username = UserDF.getValidUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
-        ResponseValidator.validateJsonField(response, "email", containsString("@"));
+        Assert.assertNotNull(response.jsonPath().getString("email"));
     }
 }

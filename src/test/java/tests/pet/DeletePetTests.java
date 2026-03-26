@@ -4,8 +4,8 @@ import base.BaseApiTest;
 import dataFactory.PetDF;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import validators.ResponseValidator;
 
 public class DeletePetTests extends BaseApiTest {
 
@@ -13,43 +13,43 @@ public class DeletePetTests extends BaseApiTest {
     public void verifyThatDeletePetShouldReturn200WhenPetExists() {
         long petId = PetDF.getValidId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        ResponseValidator.validateStatusCode(response, 200);
-        ResponseValidator.validateJsonFieldEquals(response, "code", 200);
-        ResponseValidator.validateFieldExists(response, "message");
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertEquals(response.jsonPath().getInt("code"), 200);
+        Assert.assertNotNull(response.jsonPath().get("message"));
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatDeletePetShouldReturn404WhenPetNotFound() {
         long petId = PetDF.getNonexistentId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        ResponseValidator.validateStatusCode(response, 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatDeletePetShouldReturnResponseWithinTimeLimit() {
         long petId = PetDF.getValidId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        ResponseValidator.validateResponseTime(response, 3000);
+        Assert.assertTrue(response.getTime() < 3000);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatDeletePetShouldReturnProperContentType() {
         long petId = PetDF.getValidId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        ResponseValidator.validateContentType(response, "application/json");
+        Assert.assertTrue(response.getContentType().contains("application/json"));
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatDeletePetWithInvalidIdShouldReturn404() {
         long petId = PetDF.getInvalidId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        ResponseValidator.validateStatusCode(response, 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatDeletePetShouldReturnSuccessMessage() {
         long petId = PetDF.getValidId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
-        ResponseValidator.validateFieldExists(response, "message");
+        Assert.assertNotNull(response.jsonPath().get("message"));
     }
 }

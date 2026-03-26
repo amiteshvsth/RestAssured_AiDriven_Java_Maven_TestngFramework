@@ -1,15 +1,21 @@
 package clients;
 
-import builders.RequestBuilder;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import utils.Logger;
 
+import static io.restassured.RestAssured.given;
+
 public class BaseApiClient {
     private final RequestSpecification baseSpec;
+    private static final AllureRestAssured allureFilter = new AllureRestAssured();
 
     public BaseApiClient() {
-        baseSpec = new RequestBuilder().build();
+        baseSpec = given()
+                .contentType("application/json")
+                .accept("application/json")
+                .filter(allureFilter);
     }
 
     public Response get(String endpoint) {

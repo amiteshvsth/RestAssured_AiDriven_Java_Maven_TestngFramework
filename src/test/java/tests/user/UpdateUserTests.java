@@ -5,8 +5,8 @@ import dataFactory.UserDF;
 import dto.user.UpdateUserRequest;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import validators.ResponseValidator;
 
 public class UpdateUserTests extends BaseApiTest {
 
@@ -15,9 +15,9 @@ public class UpdateUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        ResponseValidator.validateStatusCode(response, 200);
-        ResponseValidator.validateJsonFieldEquals(response, "code", 200);
-        ResponseValidator.validateFieldExists(response, "message");
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertEquals(response.jsonPath().getInt("code"), 200);
+        Assert.assertNotNull(response.jsonPath().get("message"));
     }
 
     @Test(groups = {"regression", "user", "negative"})
@@ -25,7 +25,7 @@ public class UpdateUserTests extends BaseApiTest {
         String username = UserDF.getNonexistentUsername();
         UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        ResponseValidator.validateStatusCode(response, 200);
+        Assert.assertEquals(response.getStatusCode(), 200);
     }
 
     @Test(groups = {"regression", "user", "positive"})
@@ -33,7 +33,7 @@ public class UpdateUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        ResponseValidator.validateResponseTime(response, 3000);
+        Assert.assertTrue(response.getTime() < 3000);
     }
 
     @Test(groups = {"regression", "user", "positive"})
@@ -41,7 +41,7 @@ public class UpdateUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        ResponseValidator.validateContentType(response, "application/json");
+        Assert.assertTrue(response.getContentType().contains("application/json"));
     }
 
     @Test(groups = {"regression", "user", "negative"})
@@ -50,7 +50,7 @@ public class UpdateUserTests extends BaseApiTest {
         UpdateUserRequest request = UserDF.getUpdateData();
         request.setEmail("invalid-email-format");
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        ResponseValidator.validateStatusCode(response, 200);
+        Assert.assertEquals(response.getStatusCode(), 200);
     }
 
     @Test(groups = {"regression", "user", "edge"})
@@ -58,6 +58,6 @@ public class UpdateUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         UpdateUserRequest request = new UpdateUserRequest();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
-        ResponseValidator.validateStatusCode(response, 200);
+        Assert.assertEquals(response.getStatusCode(), 200);
     }
 }

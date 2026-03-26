@@ -4,8 +4,8 @@ import base.BaseApiTest;
 import dataFactory.PetDF;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import validators.ResponseValidator;
 
 public class GetPetTests extends BaseApiTest {
 
@@ -13,71 +13,71 @@ public class GetPetTests extends BaseApiTest {
     public void verifyThatGetPetShouldReturn200WhenPetExists() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        ResponseValidator.validateStatusCode(response, 200);
-        ResponseValidator.validateFieldExists(response, "id");
-        ResponseValidator.validateFieldExists(response, "name");
-        ResponseValidator.validateFieldExists(response, "status");
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertNotNull(response.jsonPath().get("id"));
+        Assert.assertNotNull(response.jsonPath().get("name"));
+        Assert.assertNotNull(response.jsonPath().get("status"));
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetShouldReturn404WhenPetNotFound() {
         long petId = PetDF.getNonexistentId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        ResponseValidator.validateStatusCode(response, 404);
-        ResponseValidator.validateJsonFieldEquals(response, "code", 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
+        Assert.assertEquals(response.jsonPath().getInt("code"), 404);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnResponseWithinTimeLimit() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        ResponseValidator.validateResponseTime(response, 3000);
+        Assert.assertTrue(response.getTime() < 3000);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnProperContentType() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        ResponseValidator.validateContentType(response, "application/json");
+        Assert.assertTrue(response.getContentType().contains("application/json"));
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturnAllRequiredFields() {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        ResponseValidator.validateFieldExists(response, "id");
-        ResponseValidator.validateFieldExists(response, "name");
-        ResponseValidator.validateFieldExists(response, "photoUrls");
-        ResponseValidator.validateFieldExists(response, "tags");
-        ResponseValidator.validateFieldExists(response, "status");
+        Assert.assertNotNull(response.jsonPath().get("id"));
+        Assert.assertNotNull(response.jsonPath().get("name"));
+        Assert.assertNotNull(response.jsonPath().get("photoUrls"));
+        Assert.assertNotNull(response.jsonPath().get("tags"));
+        Assert.assertNotNull(response.jsonPath().get("status"));
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetByInvalidIdShouldReturn404() {
         long petId = PetDF.getInvalidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
-        ResponseValidator.validateStatusCode(response, 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
     }
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatFindPetsByStatusShouldReturn200() {
         String status = PetDF.getAvailableStatus();
         Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_STATUS + "?status=" + status);
-        ResponseValidator.validateStatusCode(response, 200);
-        ResponseValidator.validateArrayNotEmpty(response, "");
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertFalse(response.jsonPath().getList("").isEmpty());
     }
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatFindPetsByStatusShouldReturnEmptyArrayForInvalidStatus() {
         String status = PetDF.getInvalidStatus();
         Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_STATUS + "?status=" + status);
-        ResponseValidator.validateStatusCode(response, 200);
+        Assert.assertEquals(response.getStatusCode(), 200);
     }
 
     @Test(groups = {"regression", "pet", "positive"})
     public void verifyThatFindPetsByTagsShouldReturn200() {
         String tag = PetDF.getValidTag();
         Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_TAGS + "?tags=" + tag);
-        ResponseValidator.validateStatusCode(response, 200);
+        Assert.assertEquals(response.getStatusCode(), 200);
     }
 }

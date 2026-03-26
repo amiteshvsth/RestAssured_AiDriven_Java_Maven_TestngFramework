@@ -4,8 +4,8 @@ import base.BaseApiTest;
 import dataFactory.StoreDF;
 import endpoints.StoreEndpoints;
 import io.restassured.response.Response;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import validators.ResponseValidator;
 
 public class GetOrderTests extends BaseApiTest {
 
@@ -13,50 +13,50 @@ public class GetOrderTests extends BaseApiTest {
     public void verifyThatGetOrderShouldReturn200WhenOrderExists() {
         long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
-        ResponseValidator.validateStatusCode(response, 200);
-        ResponseValidator.validateJsonFieldEquals(response, "id", orderId);
-        ResponseValidator.validateFieldExists(response, "petId");
-        ResponseValidator.validateFieldExists(response, "quantity");
-        ResponseValidator.validateFieldExists(response, "status");
+        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertEquals(response.jsonPath().getLong("id"), Long.valueOf(orderId));
+        Assert.assertNotNull(response.jsonPath().get("petId"));
+        Assert.assertNotNull(response.jsonPath().get("quantity"));
+        Assert.assertNotNull(response.jsonPath().get("status"));
     }
 
     @Test(groups = {"regression", "store", "negative"})
     public void verifyThatGetOrderShouldReturn404WhenOrderNotFound() {
         long orderId = StoreDF.getNonexistentId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
-        ResponseValidator.validateStatusCode(response, 404);
-        ResponseValidator.validateJsonFieldEquals(response, "code", 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
+        Assert.assertEquals(response.jsonPath().getInt("code"), 404);
     }
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatGetOrderShouldReturnResponseWithinTimeLimit() {
         long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
-        ResponseValidator.validateResponseTime(response, 3000);
+        Assert.assertTrue(response.getTime() < 3000);
     }
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatGetOrderShouldReturnProperContentType() {
         long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
-        ResponseValidator.validateContentType(response, "application/json");
+        Assert.assertTrue(response.getContentType().contains("application/json"));
     }
 
     @Test(groups = {"regression", "store", "positive"})
     public void verifyThatGetOrderShouldReturnAllRequiredFields() {
         long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
-        ResponseValidator.validateFieldExists(response, "id");
-        ResponseValidator.validateFieldExists(response, "petId");
-        ResponseValidator.validateFieldExists(response, "quantity");
-        ResponseValidator.validateFieldExists(response, "status");
-        ResponseValidator.validateFieldExists(response, "complete");
+        Assert.assertNotNull(response.jsonPath().get("id"));
+        Assert.assertNotNull(response.jsonPath().get("petId"));
+        Assert.assertNotNull(response.jsonPath().get("quantity"));
+        Assert.assertNotNull(response.jsonPath().get("status"));
+        Assert.assertNotNull(response.jsonPath().get("complete"));
     }
 
     @Test(groups = {"regression", "store", "negative"})
     public void verifyThatGetOrderWithInvalidIdShouldReturn404() {
         long orderId = StoreDF.getInvalidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
-        ResponseValidator.validateStatusCode(response, 404);
+        Assert.assertEquals(response.getStatusCode(), 404);
     }
 }
