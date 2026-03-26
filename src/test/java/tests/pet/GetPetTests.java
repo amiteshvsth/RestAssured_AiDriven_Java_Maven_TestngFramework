@@ -2,11 +2,11 @@ package tests.pet;
 
 import base.BaseApiTest;
 import dataFactory.PetDF;
+import dto.pet.GetPetResponse;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 
 public class GetPetTests extends BaseApiTest {
 
@@ -15,17 +15,12 @@ public class GetPetTests extends BaseApiTest {
         long petId = PetDF.getValidId();
         Response response = apiClient.get(PetEndpoints.GET_PET, petId);
         int statusCode = response.getStatusCode();
-        Object responseId = response.jsonPath().get("id");
-        Object responseName = response.jsonPath().get("name");
-        Object responseStatus = response.jsonPath().get("status");
+        GetPetResponse responseDto = response.as(GetPetResponse.class);
         
         Assert.assertEquals(statusCode, 200);
-        
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(responseId);
-        softAssert.assertNotNull(responseName);
-        softAssert.assertNotNull(responseStatus);
-        softAssert.assertAll();
+        Assert.assertNotNull(responseDto.getId());
+        Assert.assertNotNull(responseDto.getName());
+        Assert.assertNotNull(responseDto.getStatus());
     }
 
     @Test(groups = {"regression", "pet", "negative"})

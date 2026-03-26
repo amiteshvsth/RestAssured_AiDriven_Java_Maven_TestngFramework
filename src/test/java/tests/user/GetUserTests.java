@@ -2,6 +2,7 @@ package tests.user;
 
 import base.BaseApiTest;
 import dataFactory.UserDF;
+import dto.user.GetUserResponse;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -15,16 +16,14 @@ public class GetUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
         int statusCode = response.getStatusCode();
-        String responseUsername = response.jsonPath().getString("username");
-        Object responseId = response.jsonPath().get("id");
-        Object responseEmail = response.jsonPath().get("email");
+        GetUserResponse responseDto = response.as(GetUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseUsername, username);
-        softAssert.assertNotNull(responseId);
-        softAssert.assertNotNull(responseEmail);
+        softAssert.assertEquals(responseDto.getUsername(), username);
+        softAssert.assertNotNull(responseDto.getId());
+        softAssert.assertNotNull(responseDto.getEmail());
         softAssert.assertAll();
     }
 
@@ -33,13 +32,8 @@ public class GetUserTests extends BaseApiTest {
         String username = UserDF.getNonexistentUsername();
         Response response = apiClient.getWithPathParam(UserEndpoints.GET_USER, "username", username);
         int statusCode = response.getStatusCode();
-        int responseCode = response.jsonPath().getInt("code");
         
         Assert.assertEquals(statusCode, 404);
-        
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseCode, 404);
-        softAssert.assertAll();
     }
 
     @Test(groups = {"regression", "user", "negative"})

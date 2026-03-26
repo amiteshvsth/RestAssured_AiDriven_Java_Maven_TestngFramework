@@ -2,6 +2,7 @@ package tests.pet;
 
 import base.BaseApiTest;
 import dataFactory.PetDF;
+import dto.pet.AddPetResponse;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -14,14 +15,13 @@ public class AddPetTests extends BaseApiTest {
     public void verifyThatAddPetShouldReturn200WhenValidPayload() {
         Response response = apiClient.post(PetEndpoints.ADD_PET, PetDF.getData());
         int statusCode = response.getStatusCode();
-        Object responseId = response.jsonPath().get("id");
-        Object responseName = response.jsonPath().get("name");
+        AddPetResponse responseDto = response.as(AddPetResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(responseId);
-        softAssert.assertNotNull(responseName);
+        softAssert.assertNotNull(responseDto.getId());
+        softAssert.assertNotNull(responseDto.getName());
         softAssert.assertAll();
     }
 

@@ -2,6 +2,7 @@ package tests.pet;
 
 import base.BaseApiTest;
 import dataFactory.PetDF;
+import dto.pet.DeletePetResponse;
 import endpoints.PetEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -15,14 +16,13 @@ public class DeletePetTests extends BaseApiTest {
         long petId = PetDF.getValidId();
         Response response = apiClient.delete(PetEndpoints.DELETE_PET, petId);
         int statusCode = response.getStatusCode();
-        int responseCode = response.jsonPath().getInt("code");
-        Object responseMessage = response.jsonPath().get("message");
+        DeletePetResponse responseDto = response.as(DeletePetResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseCode, 200);
-        softAssert.assertNotNull(responseMessage);
+        softAssert.assertEquals(responseDto.getCode(), 200);
+        softAssert.assertNotNull(responseDto.getMessage());
         softAssert.assertAll();
     }
 

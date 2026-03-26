@@ -2,6 +2,7 @@ package tests.store;
 
 import base.BaseApiTest;
 import dataFactory.StoreDF;
+import dto.store.GetOrderResponse;
 import endpoints.StoreEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -15,14 +16,13 @@ public class GetOrderTests extends BaseApiTest {
         long orderId = StoreDF.getValidId();
         Response response = apiClient.getWithPathParam(StoreEndpoints.GET_ORDER, "orderId", orderId);
         int statusCode = response.getStatusCode();
-        Long responseId = response.jsonPath().getLong("id");
-        Object responseStatus = response.jsonPath().get("status");
+        GetOrderResponse responseDto = response.as(GetOrderResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseId, Long.valueOf(orderId));
-        softAssert.assertNotNull(responseStatus);
+        softAssert.assertEquals(responseDto.getId(), Long.valueOf(orderId));
+        softAssert.assertNotNull(responseDto.getStatus());
         softAssert.assertAll();
     }
 

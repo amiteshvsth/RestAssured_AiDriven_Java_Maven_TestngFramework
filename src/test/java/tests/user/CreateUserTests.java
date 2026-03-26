@@ -3,6 +3,7 @@ package tests.user;
 import base.BaseApiTest;
 import dataFactory.UserDF;
 import dto.user.CreateUserRequest;
+import dto.user.CreateUserResponse;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -16,14 +17,13 @@ public class CreateUserTests extends BaseApiTest {
         CreateUserRequest request = UserDF.getData();
         Response response = apiClient.post(UserEndpoints.CREATE_USER, request);
         int statusCode = response.getStatusCode();
-        int responseCode = response.jsonPath().getInt("code");
-        Object responseMessage = response.jsonPath().get("message");
+        CreateUserResponse responseDto = response.as(CreateUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseCode, 200);
-        softAssert.assertNotNull(responseMessage);
+        softAssert.assertEquals(responseDto.getCode(), 200);
+        softAssert.assertNotNull(responseDto.getMessage());
         softAssert.assertAll();
     }
 
@@ -32,12 +32,12 @@ public class CreateUserTests extends BaseApiTest {
         Response response = apiClient.post(UserEndpoints.CREATE_USER_WITH_ARRAY,
                 UserDF.getArrayData());
         int statusCode = response.getStatusCode();
-        int responseCode = response.jsonPath().getInt("code");
+        CreateUserResponse responseDto = response.as(CreateUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseCode, 200);
+        softAssert.assertEquals(responseDto.getCode(), 200);
         softAssert.assertAll();
     }
 
@@ -46,12 +46,12 @@ public class CreateUserTests extends BaseApiTest {
         Response response = apiClient.post(UserEndpoints.CREATE_USER_WITH_LIST,
                 UserDF.getListData());
         int statusCode = response.getStatusCode();
-        int responseCode = response.jsonPath().getInt("code");
+        CreateUserResponse responseDto = response.as(CreateUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseCode, 200);
+        softAssert.assertEquals(responseDto.getCode(), 200);
         softAssert.assertAll();
     }
 }

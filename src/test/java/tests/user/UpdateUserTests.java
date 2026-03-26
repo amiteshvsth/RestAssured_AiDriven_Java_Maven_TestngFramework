@@ -3,6 +3,7 @@ package tests.user;
 import base.BaseApiTest;
 import dataFactory.UserDF;
 import dto.user.UpdateUserRequest;
+import dto.user.UpdateUserResponse;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -17,14 +18,13 @@ public class UpdateUserTests extends BaseApiTest {
         UpdateUserRequest request = UserDF.getUpdateData();
         Response response = apiClient.putWithPathParam(UserEndpoints.UPDATE_USER, request, "username", username);
         int statusCode = response.getStatusCode();
-        int responseCode = response.jsonPath().getInt("code");
-        Object responseMessage = response.jsonPath().get("message");
+        UpdateUserResponse responseDto = response.as(UpdateUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseCode, 200);
-        softAssert.assertNotNull(responseMessage);
+        softAssert.assertEquals(responseDto.getCode(), 200);
+        softAssert.assertNotNull(responseDto.getMessage());
         softAssert.assertAll();
     }
 

@@ -3,6 +3,7 @@ package tests.store;
 import base.BaseApiTest;
 import dataFactory.StoreDF;
 import dto.store.PlaceOrderRequest;
+import dto.store.PlaceOrderResponse;
 import endpoints.StoreEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -16,14 +17,13 @@ public class PlaceOrderTests extends BaseApiTest {
         PlaceOrderRequest request = StoreDF.getData();
         Response response = apiClient.post(StoreEndpoints.PLACE_ORDER, request);
         int statusCode = response.getStatusCode();
-        Object responseId = response.jsonPath().get("id");
-        Object responseStatus = response.jsonPath().get("status");
+        PlaceOrderResponse responseDto = response.as(PlaceOrderResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertNotNull(responseId);
-        softAssert.assertNotNull(responseStatus);
+        softAssert.assertNotNull(responseDto.getId());
+        softAssert.assertNotNull(responseDto.getStatus());
         softAssert.assertAll();
     }
 

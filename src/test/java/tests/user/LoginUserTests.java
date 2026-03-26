@@ -6,7 +6,6 @@ import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 
 public class LoginUserTests extends BaseApiTest {
 
@@ -19,10 +18,7 @@ public class LoginUserTests extends BaseApiTest {
         String loginMessage = response.getBody().asString();
         
         Assert.assertEquals(statusCode, 200);
-        
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertTrue(loginMessage.contains("logged in"));
-        softAssert.assertAll();
+        Assert.assertTrue(loginMessage.contains("logged in"));
     }
 
     @Test(groups = {"regression", "user", "negative"})

@@ -2,6 +2,7 @@ package tests.user;
 
 import base.BaseApiTest;
 import dataFactory.UserDF;
+import dto.user.DeleteUserResponse;
 import endpoints.UserEndpoints;
 import io.restassured.response.Response;
 import org.testng.Assert;
@@ -15,14 +16,13 @@ public class DeleteUserTests extends BaseApiTest {
         String username = UserDF.getValidUsername();
         Response response = apiClient.deleteWithPathParam(UserEndpoints.DELETE_USER, "username", username);
         int statusCode = response.getStatusCode();
-        int responseCode = response.jsonPath().getInt("code");
-        Object responseMessage = response.jsonPath().get("message");
+        DeleteUserResponse responseDto = response.as(DeleteUserResponse.class);
         
         Assert.assertEquals(statusCode, 200);
         
         SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(responseCode, 200);
-        softAssert.assertNotNull(responseMessage);
+        softAssert.assertEquals(responseDto.getCode(), 200);
+        softAssert.assertNotNull(responseDto.getMessage());
         softAssert.assertAll();
     }
 
