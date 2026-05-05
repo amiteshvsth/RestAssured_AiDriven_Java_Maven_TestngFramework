@@ -2,19 +2,25 @@ package tests.user;
 
 import base.BaseApiTest;
 import dataFactory.UserDF;
-import endpoints.UserEndpoints;
+import utils.ApiEndPoints;
+import utils.ApiHelpers;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static io.restassured.RestAssured.given;
+
 public class GetUserTests extends BaseApiTest {
+    private ApiHelpers helpers = new ApiHelpers();
 
     @Test(groups = {"smoke", "regression", "user", "positive"})
     public void verifyThatGetUserShouldReturn200WhenUserExists() {
         String username = "testuser123";
-        apiClient.post(UserEndpoints.CREATE_USER, UserDF.getData());
+        given().spec(helpers.requestSpecificationWithJSONHeader()).body(UserDF.getData()).when().
+                post(ApiEndPoints.CREATE_USER);
         
-        Response response = apiClient.get(UserEndpoints.GET_USER.replace("{username}", username));
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).pathParam("username", username).when().
+                get(ApiEndPoints.GET_USER);
         int statusCode = response.getStatusCode();
         
         Assert.assertTrue(statusCode == 200 || statusCode == 404);
@@ -22,8 +28,9 @@ public class GetUserTests extends BaseApiTest {
 
     @Test(groups = {"regression", "user", "negative"})
     public void verifyThatGetUserShouldReturn404WhenUserNotFound() {
-        String username = UserDF.getNonexistentUsername();
-        Response response = apiClient.get(UserEndpoints.GET_USER.replace("{username}", username));
+        String username = "nonexistentuser999";
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).pathParam("username", username).when().
+                get(ApiEndPoints.GET_USER);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 404);
@@ -32,7 +39,8 @@ public class GetUserTests extends BaseApiTest {
     @Test(groups = {"regression", "user", "negative"})
     public void verifyThatGetUserByInvalidUsernameShouldReturn400() {
         String username = "testuser";
-        Response response = apiClient.get(UserEndpoints.GET_USER.replace("{username}", username));
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).pathParam("username", username).when().
+                get(ApiEndPoints.GET_USER);
         int statusCode = response.getStatusCode();
         
         Assert.assertTrue(statusCode == 200 || statusCode == 404);

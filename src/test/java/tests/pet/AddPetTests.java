@@ -3,16 +3,21 @@ package tests.pet;
 import base.BaseApiTest;
 import dataFactory.PetDF;
 import dto.pet.AddPetResponse;
-import endpoints.PetEndpoints;
+import utils.ApiEndPoints;
+import utils.ApiHelpers;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static io.restassured.RestAssured.given;
+
 public class AddPetTests extends BaseApiTest {
+    private ApiHelpers helpers = new ApiHelpers();
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatAddPetShouldReturn200WhenValidPayload() {
-        Response response = apiClient.post(PetEndpoints.ADD_PET, PetDF.getData());
+        Response response = given().spec(helpers.requestSpecificationWithJSONHeader()).body(PetDF.getData()).when().
+                post(ApiEndPoints.ADD_PET);
         int statusCode = response.getStatusCode();
         AddPetResponse responseDto = response.as(AddPetResponse.class);
         
@@ -22,7 +27,8 @@ public class AddPetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatAddPetShouldReturn405WhenInvalidPayload() {
-        Response response = apiClient.post(PetEndpoints.ADD_PET, "");
+        Response response = given().spec(helpers.requestSpecificationWithJSONHeader()).body("").when().
+                post(ApiEndPoints.ADD_PET);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 405);

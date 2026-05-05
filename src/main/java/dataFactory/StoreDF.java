@@ -19,16 +19,4 @@ public class StoreDF {
         request.setComplete(false);
         return request;
     }
-
-    public static Long getValidId() {
-        return faker.number().randomNumber();
-    }
-
-    public static Long getNonexistentId() {
-        return 999999999L;
-    }
-
-    public static Long getInvalidId() {
-        return -1L;
-    }
 }

@@ -4,20 +4,26 @@ import base.BaseApiTest;
 import dataFactory.PetDF;
 import dto.pet.AddPetRequest;
 import dto.pet.GetPetResponse;
-import endpoints.PetEndpoints;
+import utils.ApiEndPoints;
+import utils.ApiHelpers;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static io.restassured.RestAssured.given;
+
 public class GetPetTests extends BaseApiTest {
+    private ApiHelpers helpers = new ApiHelpers();
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatGetPetShouldReturn200WhenPetExists() {
         AddPetRequest petRequest = PetDF.getData();
-        apiClient.post(PetEndpoints.ADD_PET, petRequest);
+        given().spec(helpers.requestSpecificationWithJSONHeader()).body(petRequest).when().
+                post(ApiEndPoints.ADD_PET);
         
         long petId = petRequest.getId();
-        Response response = apiClient.get(PetEndpoints.GET_PET, petId);
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).pathParam("petId", petId).when().
+                get(ApiEndPoints.GET_PET);
         int statusCode = response.getStatusCode();
         GetPetResponse responseDto = response.as(GetPetResponse.class);
         
@@ -27,8 +33,9 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetShouldReturn404WhenPetNotFound() {
-        long petId = PetDF.getNonexistentId();
-        Response response = apiClient.get(PetEndpoints.GET_PET, petId);
+        long petId = 999999999L;
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).pathParam("petId", petId).when().
+                get(ApiEndPoints.GET_PET);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 404);
@@ -36,8 +43,9 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatGetPetShouldReturn400WhenInvalidId() {
-        long petId = PetDF.getInvalidId();
-        Response response = apiClient.get(PetEndpoints.GET_PET, petId);
+        long petId = -1L;
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).pathParam("petId", petId).when().
+                get(ApiEndPoints.GET_PET);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 404);
@@ -45,8 +53,9 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatFindPetsByStatusShouldReturn200() {
-        String status = PetDF.getAvailableStatus();
-        Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_STATUS + "?status=" + status);
+        String status = "available";
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).when().
+                get(ApiEndPoints.FIND_PETS_BY_STATUS + "?status=" + status);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 200);
@@ -54,8 +63,9 @@ public class GetPetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatFindPetsByStatusShouldReturn400ForInvalidStatus() {
-        String status = PetDF.getInvalidStatus();
-        Response response = apiClient.get(PetEndpoints.FIND_PETS_BY_STATUS + "?status=" + status);
+        String status = "invalid_status";
+        Response response = given().spec(helpers.requestSpecificationBaseURI()).when().
+                get(ApiEndPoints.FIND_PETS_BY_STATUS + "?status=" + status);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 200);

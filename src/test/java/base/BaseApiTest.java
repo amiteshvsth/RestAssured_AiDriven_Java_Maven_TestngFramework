@@ -1,18 +1,21 @@
 package base;
 
-import clients.BaseApiClient;
+import utils.ApiHelpers;
+import utils.AllureUtils;
+import utils.TraceUtils;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeSuite;
-import utils.AllureUtils;
-import utils.TraceUtils;
 
 import java.io.File;
 
+import static io.restassured.RestAssured.given;
+
 public class BaseApiTest {
-    protected BaseApiClient apiClient;
+    protected ApiHelpers apiHelpers;
 
     @BeforeSuite
     public void initializeReporting() {
@@ -23,7 +26,7 @@ public class BaseApiTest {
     @BeforeClass
     public void setup() {
         RestAssured.baseURI = "https://petstore.swagger.io/v2";
-        apiClient = new BaseApiClient();
+        apiHelpers = new ApiHelpers();
         AllureUtils.initializeContext();
     }
 
@@ -33,14 +36,19 @@ public class BaseApiTest {
 
     protected Response executeGet(String endpoint) {
         logStep("GET: " + endpoint);
-        Response response = apiClient.get(endpoint);
+        Response response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).get(endpoint);
         captureTrace("GET", endpoint, response);
         return response;
     }
 
     protected Response executeGet(String endpoint, Object... pathParams) {
         logStep("GET: " + endpoint);
-        Response response = apiClient.get(endpoint, pathParams);
+        Response response;
+        if (pathParams != null && pathParams.length > 0) {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).pathParam("petId", pathParams[0]).get(endpoint);
+        } else {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).get(endpoint);
+        }
         captureTrace("GET", endpoint, response);
         return response;
     }
@@ -48,7 +56,7 @@ public class BaseApiTest {
     protected Response executePost(String endpoint, Object body) {
         logStep("POST: " + endpoint);
         TraceUtils.startTrace("POST", endpoint);
-        Response response = apiClient.post(endpoint, body);
+        Response response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).body(body).post(endpoint);
         captureTrace("POST", endpoint, response);
         return response;
     }
@@ -56,7 +64,12 @@ public class BaseApiTest {
     protected Response executePost(String endpoint, Object body, Object... pathParams) {
         logStep("POST: " + endpoint);
         TraceUtils.startTrace("POST", endpoint);
-        Response response = apiClient.post(endpoint, body, pathParams);
+        Response response;
+        if (pathParams != null && pathParams.length > 0) {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).body(body).pathParam("petId", pathParams[0]).post(endpoint);
+        } else {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).body(body).post(endpoint);
+        }
         captureTrace("POST", endpoint, response);
         return response;
     }
@@ -64,7 +77,7 @@ public class BaseApiTest {
     protected Response executePut(String endpoint, Object body) {
         logStep("PUT: " + endpoint);
         TraceUtils.startTrace("PUT", endpoint);
-        Response response = apiClient.put(endpoint, body);
+        Response response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).body(body).put(endpoint);
         captureTrace("PUT", endpoint, response);
         return response;
     }
@@ -72,7 +85,12 @@ public class BaseApiTest {
     protected Response executePut(String endpoint, Object body, Object... pathParams) {
         logStep("PUT: " + endpoint);
         TraceUtils.startTrace("PUT", endpoint);
-        Response response = apiClient.put(endpoint, body, pathParams);
+        Response response;
+        if (pathParams != null && pathParams.length > 0) {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).body(body).pathParam("petId", pathParams[0]).put(endpoint);
+        } else {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).body(body).put(endpoint);
+        }
         captureTrace("PUT", endpoint, response);
         return response;
     }
@@ -80,7 +98,7 @@ public class BaseApiTest {
     protected Response executeDelete(String endpoint) {
         logStep("DELETE: " + endpoint);
         TraceUtils.startTrace("DELETE", endpoint);
-        Response response = apiClient.delete(endpoint);
+        Response response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).delete(endpoint);
         captureTrace("DELETE", endpoint, response);
         return response;
     }
@@ -88,7 +106,12 @@ public class BaseApiTest {
     protected Response executeDelete(String endpoint, Object... pathParams) {
         logStep("DELETE: " + endpoint);
         TraceUtils.startTrace("DELETE", endpoint);
-        Response response = apiClient.delete(endpoint, pathParams);
+        Response response;
+        if (pathParams != null && pathParams.length > 0) {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).pathParam("petId", pathParams[0]).delete(endpoint);
+        } else {
+            response = given().spec(apiHelpers.requestSpecificationWithJSONHeader()).delete(endpoint);
+        }
         captureTrace("DELETE", endpoint, response);
         return response;
     }

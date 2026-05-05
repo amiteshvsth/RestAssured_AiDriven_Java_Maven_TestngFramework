@@ -2,18 +2,31 @@ package tests.pet;
 
 import base.BaseApiTest;
 import dataFactory.PetDF;
+import dto.pet.AddPetRequest;
 import dto.pet.UpdatePetRequest;
-import endpoints.PetEndpoints;
+import utils.ApiEndPoints;
+import utils.ApiHelpers;
 import io.restassured.response.Response;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static io.restassured.RestAssured.given;
+
 public class UpdatePetTests extends BaseApiTest {
+    private ApiHelpers helpers = new ApiHelpers();
 
     @Test(groups = {"smoke", "regression", "pet", "positive"})
     public void verifyThatUpdatePetShouldReturn200WhenValidPayload() {
-        UpdatePetRequest request = PetDF.getDataAsUpdatePetRequest();
-        Response response = apiClient.put(PetEndpoints.PET_BASE, request);
+        AddPetRequest addPetRequest = PetDF.getData();
+        UpdatePetRequest request = new UpdatePetRequest();
+        request.setId(addPetRequest.getId());
+        request.setName(addPetRequest.getName());
+        request.setCategory(addPetRequest.getCategory());
+        request.setPhotoUrls(addPetRequest.getPhotoUrls());
+        request.setTags(addPetRequest.getTags());
+        request.setStatus("pending");
+        Response response = given().spec(helpers.requestSpecificationWithJSONHeader()).body(request).when().
+                put(ApiEndPoints.PET_BASE);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 200);
@@ -21,8 +34,16 @@ public class UpdatePetTests extends BaseApiTest {
 
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatUpdatePetShouldReturn404WhenPetNotFound() {
-        UpdatePetRequest request = PetDF.getDataAsUpdatePetRequest();
-        Response response = apiClient.put(PetEndpoints.PET_BASE, request);
+        AddPetRequest addPetRequest = PetDF.getData();
+        UpdatePetRequest request = new UpdatePetRequest();
+        request.setId(addPetRequest.getId());
+        request.setName(addPetRequest.getName());
+        request.setCategory(addPetRequest.getCategory());
+        request.setPhotoUrls(addPetRequest.getPhotoUrls());
+        request.setTags(addPetRequest.getTags());
+        request.setStatus("pending");
+        Response response = given().spec(helpers.requestSpecificationWithJSONHeader()).body(request).when().
+                put(ApiEndPoints.PET_BASE);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 200);
@@ -31,7 +52,8 @@ public class UpdatePetTests extends BaseApiTest {
     @Test(groups = {"regression", "pet", "negative"})
     public void verifyThatUpdatePetShouldReturn400WhenInvalidPayload() {
         UpdatePetRequest request = new UpdatePetRequest();
-        Response response = apiClient.put(PetEndpoints.PET_BASE, request);
+        Response response = given().spec(helpers.requestSpecificationWithJSONHeader()).body(request).when().
+                put(ApiEndPoints.PET_BASE);
         int statusCode = response.getStatusCode();
         
         Assert.assertEquals(statusCode, 200);
